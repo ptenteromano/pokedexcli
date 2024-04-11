@@ -20,21 +20,7 @@ func NewCache(interval time.Duration) *Cache {
 		entries: make(map[string]cacheEntry),
 	}
 
-	// This goroutine will run forever and will remove entries from the cache
-	go func() {
-		for {
-			time.Sleep(interval)
-			// fmt.Println("Cleaning cache")
-			c.mu.Lock()
-
-			for key, entry := range c.entries {
-				if time.Since(entry.createdAt) > interval {
-					delete(c.entries, key)
-				}
-			}
-			c.mu.Unlock()
-		}
-	}()
+	go c.dropStale(interval)
 
 	return c
 }
@@ -58,4 +44,19 @@ func (c *Cache) Get(key string) ([]byte, bool) {
 	}
 
 	return entry.val, true
+}
+
+// Used as a go routine to clear and sync the cache
+func (c *Cache) dropStale(interval time.Duration) {
+	for {
+		time.Sleep(interval)
+		c.mu.Lock()
+
+		for key, entry := range c.entries {
+			if time.Since(entry.createdAt) > interval {
+				delete(c.entries, key)
+			}
+		}
+		c.mu.Unlock()
+	}
 }
