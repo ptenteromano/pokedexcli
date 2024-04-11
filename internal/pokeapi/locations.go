@@ -2,7 +2,6 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
@@ -13,14 +12,14 @@ type locationArea struct {
 	Url  string `json:"url"`
 }
 
-type locationResponse struct {
+type LocationResponse struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
 	Previous string `json:"previous"`
 	Results  []locationArea
 }
 
-func GetLocations(url string) ([]locationArea, string, string) {
+func GetLocations(url string) LocationResponse {
 	if url == "" {
 		url = POKEMON_API_URL + "/location-area/"
 	}
@@ -41,14 +40,14 @@ func GetLocations(url string) ([]locationArea, string, string) {
 	}
 
 	// To print the raw JSON as a string, you can simply do:
-	fmt.Println("Raw JSON string:")
+	// fmt.Println("Raw JSON string:")
 
-	var data locationResponse
+	var data LocationResponse
 	if err = json.Unmarshal(body, &data); err != nil {
 		log.Fatalf("failed to unmarshal JSON: %v", err)
 	}
 
-	fmt.Println(data.Results)
+	// fmt.Println(data.Results)
 
-	return data.Results, data.Next, data.Previous
+	return data
 }

@@ -1,6 +1,9 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+
 	"github.com/ptenteromano/pokedexcli/internal/pokeapi"
 )
 
@@ -21,18 +24,31 @@ var mapbCommand = cliCommand{
 }
 
 func callMapLocations(c *config, back bool) {
-	url := c.mapUrl
+	var url string
 
 	if back {
 		url = c.mapbUrl
+	} else {
+		url = c.mapUrl
 	}
 
-	areas, next, previous := pokeapi.GetLocations(url)
+	entry, ok := c.cache.Get(url)
 
-	c.mapUrl = next
-	c.mapbUrl = previous
+	var areas pokeapi.LocationResponse
 
-	for _, area := range areas {
-		println(area.Name)
+	if ok {
+		json.Unmarshal(entry, &areas)
+	} else {
+		areas = pokeapi.GetLocations(url)
+		byteData, _ := json.Marshal(areas)
+
+		c.cache.Add(url, byteData)
+	}
+
+	c.mapUrl = areas.Next
+	c.mapbUrl = areas.Previous
+
+	for _, area := range areas.Results {
+		fmt.Println(area.Name)
 	}
 }

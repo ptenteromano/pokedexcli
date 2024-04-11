@@ -2,9 +2,12 @@ package main
 
 import (
 	"os"
+
+	"github.com/ptenteromano/pokedexcli/internal/pokecache"
 )
 
 type config struct {
+	cache   *pokecache.Cache
 	mapUrl  string
 	mapbUrl string
 }
