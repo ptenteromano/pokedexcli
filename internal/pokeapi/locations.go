@@ -8,18 +8,23 @@ import (
 	"net/http"
 )
 
+type locationArea struct {
+	Name string `json:"name"`
+	Url  string `json:"url"`
+}
+
 type locationResponse struct {
 	Count    int    `json:"count"`
 	Next     string `json:"next"`
 	Previous string `json:"previous"`
-	Results  []struct {
-		Name string `json:"name"`
-		Url  string `json:"url"`
-	}
+	Results  []locationArea
 }
 
-func GetLocations() {
-	url := POKEMON_API_URL + "/location-area/"
+func GetLocations(url string) ([]locationArea, string, string) {
+	if url == "" {
+		url = POKEMON_API_URL + "/location-area/"
+	}
+
 	resp, err := http.Get(url)
 
 	if err != nil {
@@ -44,4 +49,6 @@ func GetLocations() {
 	}
 
 	fmt.Println(data.Results)
+
+	return data.Results, data.Next, data.Previous
 }

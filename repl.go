@@ -2,29 +2,27 @@ package main
 
 import (
 	"os"
-
-	"github.com/ptenteromano/pokedexcli/internal/pokeapi"
 )
+
+type config struct {
+	mapUrl  string
+	mapbUrl string
+}
 
 type cliCommand struct {
 	name        string
 	description string
-	callback    func()
+	callback    func(conf *config)
 }
 
 var commands = map[string]cliCommand{
 	"exit": {
 		name:        "exit",
 		description: "-- Exits the program",
-		callback: func() {
+		callback: func(_ *config) {
 			os.Exit(0)
 		},
 	},
-	"map": {
-		name:        "map",
-		description: "-- Shows the region areas of the pokemon world",
-		callback: func() {
-			pokeapi.GetLocations()
-		},
-	},
+	"map":  mapCommand,
+	"mapb": mapbCommand,
 }

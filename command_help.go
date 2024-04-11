@@ -8,7 +8,7 @@ var helpCommand = cliCommand{
 	callback:    help,
 }
 
-func help() {
+func help(_ *config) {
 	for _, cmd := range commands {
 		if cmd.name == "help" {
 			continue
