@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/ptenteromano/pokedexcli/internal/pokecache"
@@ -27,8 +28,11 @@ func main() {
 			continue
 		}
 
-		if res, ok := commands[command]; ok {
-			res.callback(&conf)
+		// Split arguments by whitespace
+		args := strings.Split(command, " ")
+
+		if res, ok := commands[args[0]]; ok {
+			res.callback(&conf, args[1:]...)
 		} else {
 			fmt.Println("Command not found. Type 'help' to see all available commands.")
 		}

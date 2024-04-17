@@ -10,7 +10,7 @@ import (
 var mapCommand = cliCommand{
 	name:        "map",
 	description: "-- Shows the region areas of the pokemon world",
-	callback: func(c *config) {
+	callback: func(c *config, _ ...string) {
 		callMapLocations(c, false)
 	},
 }
@@ -18,7 +18,7 @@ var mapCommand = cliCommand{
 var mapbCommand = cliCommand{
 	name:        "mapb",
 	description: "-- Shows the previous region areas of the pokemon world",
-	callback: func(c *config) {
+	callback: func(c *config, _ ...string) {
 		callMapLocations(c, true)
 	},
 }

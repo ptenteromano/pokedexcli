@@ -15,17 +15,18 @@ type config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(conf *config)
+	callback    func(c *config, args ...string)
 }
 
 var commands = map[string]cliCommand{
 	"exit": {
 		name:        "exit",
 		description: "-- Exits the program",
-		callback: func(_ *config) {
+		callback: func(_ *config, _ ...string) {
 			os.Exit(0)
 		},
 	},
-	"map":  mapCommand,
-	"mapb": mapbCommand,
+	"map":     mapCommand,
+	"mapb":    mapbCommand,
+	"explore": exploreCommand,
 }
