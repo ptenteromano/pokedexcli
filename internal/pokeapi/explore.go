@@ -2,11 +2,22 @@ package pokeapi
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 	"log"
 	"net/http"
 )
+
+type exploreResponse struct {
+	Name              string             `json:"name"`
+	PokemonEncounters []PokemonEncounter `json:"pokemon_encounters"`
+}
+
+type PokemonEncounter struct {
+	Pokemon struct {
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"pokemon"`
+}
 
 type PokemonList struct {
 	pokemon []string
@@ -29,9 +40,11 @@ func ExploreLocation(locationName string) PokemonList {
 		log.Fatalf("failed to read response body: %v", err)
 	}
 
-	var data interface{}
+	var data exploreResponse
 	json.Unmarshal(body, &data)
 
-	fmt.Println(data)
+	// Pretty print json
+	jsonData, _ := json.MarshalIndent(data, "", "  ")
+	log.Println(string(jsonData))
 	return PokemonList{pokemon: []string{"bulbasaur", "charmander", "squirtle"}}
 }
