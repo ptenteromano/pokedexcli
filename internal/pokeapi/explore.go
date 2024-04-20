@@ -2,8 +2,9 @@ package pokeapi
 
 import (
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -19,32 +20,43 @@ type PokemonEncounter struct {
 	} `json:"pokemon"`
 }
 
-type PokemonList struct {
-	pokemon []string
-}
-
-func ExploreLocation(locationName string) PokemonList {
+func ExploreLocation(locationName string) ([]string, error) {
 	url := POKEMON_API_URL + "/location-area/" + locationName
 
 	resp, err := http.Get(url)
 
 	if err != nil {
-		panic(err)
+		return nil, errors.New("failed to fetch location")
 	}
 
 	defer resp.Body.Close()
 
+	if resp.StatusCode == 404 {
+		return nil, errors.New("location not found")
+	}
+
+	if resp.StatusCode != 200 {
+		return nil, errors.New("api responded with code: " + resp.Status)
+	}
+
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		log.Fatalf("failed to read response body: %v", err)
+		return nil, errors.New("failed to read response body")
 	}
 
 	var data exploreResponse
 	json.Unmarshal(body, &data)
+	fmt.Println(data.getPokemon())
 
-	// Pretty print json
-	jsonData, _ := json.MarshalIndent(data, "", "  ")
-	log.Println(string(jsonData))
-	return PokemonList{pokemon: []string{"bulbasaur", "charmander", "squirtle"}}
+	return data.getPokemon(), nil
+}
+
+func (e exploreResponse) getPokemon() []string {
+	pokemon := []string{}
+	for _, encounter := range e.PokemonEncounters {
+		pokemon = append(pokemon, encounter.Pokemon.Name)
+	}
+
+	return pokemon
 }

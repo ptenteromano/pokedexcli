@@ -18,5 +18,14 @@ func callExploreLocation(_ *config, args ...string) {
 	}
 
 	// call the function from the pokeapi package
-	pokeapi.ExploreLocation(args[0])
+	pokemon, err := pokeapi.ExploreLocation(args[0])
+
+	if err != nil {
+		fmt.Println("Error:", err)
+	}
+
+	fmt.Printf("Exploring %s...\n", args[0])
+	for _, p := range pokemon {
+		fmt.Println("- " + p)
+	}
 }

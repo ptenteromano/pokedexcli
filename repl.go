@@ -29,4 +29,5 @@ var commands = map[string]cliCommand{
 	"map":     mapCommand,
 	"mapb":    mapbCommand,
 	"explore": exploreCommand,
+	"catch":   catchCommand,
 }
