@@ -37,8 +37,8 @@ func callCatchPokemon(c *config, args ...string) {
 	var err error
 
 	// Check if the pokemon is already cached to avoid redundant API calls
-	if c.cachedPokemon(name) != nil {
-		pokemon = c.cachedPokemon(name)
+	if c.storedPokemon(name) != nil {
+		pokemon = c.storedPokemon(name)
 	} else {
 		pokemon, err = pokeapi.FetchPokemonData(name)
 
@@ -51,10 +51,12 @@ func callCatchPokemon(c *config, args ...string) {
 
 	chance := rand.IntN(350) // Mewtwo is 340
 
-	if chance > pokemon.BaseExperience {
-		fmt.Printf("%s was caught!\n", name)
-		pokemon.Caught = true
-	} else {
+	if chance < pokemon.BaseExperience {
 		fmt.Printf("Oh no! %s broke free!\n", name)
+		return
 	}
+
+	pokemon.Caught = true
+	fmt.Printf("%s was caught!\n", name)
+	fmt.Println("You may now inspect it with the inspect command.")
 }

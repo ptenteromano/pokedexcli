@@ -33,6 +33,7 @@ var commands = map[string]cliCommand{
 	"explore": exploreCommand,
 	"catch":   catchCommand,
 	"inspect": inspectCommand,
+	"pokedex": pokedex,
 }
 
 func (c config) caughtPokemon(pokemon string) bool {
@@ -45,7 +46,7 @@ func (c config) caughtPokemon(pokemon string) bool {
 	return false
 }
 
-func (c config) cachedPokemon(pokemon string) *pokeapi.Pokemon {
+func (c config) storedPokemon(pokemon string) *pokeapi.Pokemon {
 	for _, p := range c.pokemon {
 		if p.Name == pokemon {
 			return p
@@ -53,4 +54,15 @@ func (c config) cachedPokemon(pokemon string) *pokeapi.Pokemon {
 	}
 
 	return nil
+}
+
+func (c config) listCaughtPokemon() []string {
+	var caught []string
+	for _, p := range c.pokemon {
+		if p.Caught {
+			caught = append(caught, p.Name)
+		}
+	}
+
+	return caught
 }
