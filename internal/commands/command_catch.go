@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"fmt"
@@ -10,10 +10,10 @@ import (
 var catchCommand = cliCommand{
 	name:        "catch",
 	description: "-- Attempts to catch a pokemon",
-	callback:    callCatchPokemon,
+	Callback:    callCatchPokemon,
 }
 
-func callCatchPokemon(c *config, args ...string) {
+func callCatchPokemon(c *Config, args ...string) {
 	if len(args) == 0 {
 		fmt.Println("No pokemon provided. Type 'help' to see all available commands.")
 		return

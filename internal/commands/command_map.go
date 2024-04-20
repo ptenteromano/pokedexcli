@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 var mapCommand = cliCommand{
 	name:        "map",
 	description: "-- Shows the region areas of the pokemon world",
-	callback: func(c *config, _ ...string) {
+	Callback: func(c *Config, _ ...string) {
 		callMapLocations(c, false)
 	},
 }
@@ -18,12 +18,12 @@ var mapCommand = cliCommand{
 var mapbCommand = cliCommand{
 	name:        "mapb",
 	description: "-- Shows the previous region areas of the pokemon world",
-	callback: func(c *config, _ ...string) {
+	Callback: func(c *Config, _ ...string) {
 		callMapLocations(c, true)
 	},
 }
 
-func callMapLocations(c *config, back bool) {
+func callMapLocations(c *Config, back bool) {
 	var url string
 
 	if back {
@@ -32,7 +32,7 @@ func callMapLocations(c *config, back bool) {
 		url = c.mapUrl
 	}
 
-	entry, ok := c.cache.Get(url)
+	entry, ok := c.Cache.Get(url)
 
 	var areas pokeapi.LocationResponse
 
@@ -42,7 +42,7 @@ func callMapLocations(c *config, back bool) {
 		areas = pokeapi.GetLocations(url)
 		byteData, _ := json.Marshal(areas)
 
-		c.cache.Add(url, byteData)
+		c.Cache.Add(url, byteData)
 	}
 
 	c.mapUrl = areas.Next

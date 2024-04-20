@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"fmt"
@@ -9,10 +9,10 @@ import (
 var exploreCommand = cliCommand{
 	name:        "explore",
 	description: "-- Shows the pokemon in a location",
-	callback:    callExploreLocation,
+	Callback:    callExploreLocation,
 }
 
-func callExploreLocation(_ *config, args ...string) {
+func callExploreLocation(_ *Config, args ...string) {
 	if len(args) == 0 {
 		fmt.Println("No location provided. Type 'help' to see all available commands.")
 	}

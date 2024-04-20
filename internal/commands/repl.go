@@ -1,4 +1,4 @@
-package main
+package commands
 
 import (
 	"os"
@@ -7,8 +7,8 @@ import (
 	"github.com/ptenteromano/pokedexcli/internal/pokecache"
 )
 
-type config struct {
-	cache   *pokecache.Cache // All cached data stored here
+type Config struct {
+	Cache   *pokecache.Cache // All cached data stored here
 	mapUrl  string           // These have nothing to do with the Cache - this just stores "where" the user is in the map
 	mapbUrl string
 	pokemon []*pokeapi.Pokemon
@@ -17,14 +17,14 @@ type config struct {
 type cliCommand struct {
 	name        string
 	description string
-	callback    func(c *config, args ...string)
+	Callback    func(c *Config, args ...string)
 }
 
-var commands = map[string]cliCommand{
+var AllCmds = map[string]cliCommand{
 	"exit": {
 		name:        "exit",
 		description: "-- Exits the program",
-		callback: func(_ *config, _ ...string) {
+		Callback: func(_ *Config, _ ...string) {
 			os.Exit(0)
 		},
 	},
@@ -36,7 +36,7 @@ var commands = map[string]cliCommand{
 	"pokedex": pokedex,
 }
 
-func (c config) caughtPokemon(pokemon string) bool {
+func (c Config) caughtPokemon(pokemon string) bool {
 	for _, p := range c.pokemon {
 		if p.Name == pokemon {
 			return p.Caught
@@ -46,7 +46,7 @@ func (c config) caughtPokemon(pokemon string) bool {
 	return false
 }
 
-func (c config) storedPokemon(pokemon string) *pokeapi.Pokemon {
+func (c Config) storedPokemon(pokemon string) *pokeapi.Pokemon {
 	for _, p := range c.pokemon {
 		if p.Name == pokemon {
 			return p
@@ -56,7 +56,7 @@ func (c config) storedPokemon(pokemon string) *pokeapi.Pokemon {
 	return nil
 }
 
-func (c config) listCaughtPokemon() []string {
+func (c Config) listCaughtPokemon() []string {
 	var caught []string
 	for _, p := range c.pokemon {
 		if p.Caught {
