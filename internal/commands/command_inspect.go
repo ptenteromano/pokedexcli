@@ -1,14 +1,14 @@
-package main
+package commands
 
 import "fmt"
 
 var inspectCommand = cliCommand{
 	name:        "inspect",
 	description: "-- Shows the details of a pokemon",
-	callback:    callInspectPokemon,
+	Callback:    callInspectPokemon,
 }
 
-func callInspectPokemon(c *config, args ...string) {
+func callInspectPokemon(c *Config, args ...string) {
 	if len(args) == 0 {
 		fmt.Println("No pokemon provided. Type 'help' to see all available commands.")
 	}
